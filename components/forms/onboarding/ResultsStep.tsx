@@ -60,20 +60,22 @@ export function ResultsStep({
       };
     }
 
-    if (conditions.includes("immunodeficiency") || conditions.includes("hivLowCD4")) {
+    if (conditions.includes("immunodeficiency") || 
+        conditions.includes("hivLowCD4") || 
+        conditions.includes("transplant")) {
       return {
         vaccine: "ไม่แนะนำให้ฉีดวัคซีนเด็งกี่",
-        reason: "ผู้ที่มีภาวะภูมิคุ้มกันบกพร่องรุนแรงหรือมีระดับ CD4+ ต่ำอาจไม่ตอบสนองต่อวัคซีนอย่างเพียงพอและอาจมีความเสี่ยงเพิ่มขึ้น",
+        reason: "ผู้ที่มีภาวะภูมิคุ้มกันบกพร่องรุนแรง ผู้ที่มีระดับ CD4+ ต่ำ หรือผู้ที่ได้รับการปลูกถ่ายอวัยวะ มีความเสี่ยงสูงต่อการติดเชื้อและอาจไม่ตอบสนองต่อวัคซีนอย่างเพียงพอ",
         alertType: "destructive" as const
       };
     }
 
     // Age-based recommendations
     if (age !== null) {
-      if (age < 9) {
+      if (age < 4) {
         return {
           vaccine: "ไม่แนะนำให้ฉีดวัคซีนเด็งกี่",
-          reason: "วัคซีนเด็งกี่ไม่ได้รับการอนุมัติสำหรับเด็กอายุต่ำกว่า 9 ปี",
+          reason: "วัคซีนเด็งกี่ไม่ได้รับการอนุมัติสำหรับเด็กอายุต่ำกว่า 4 ปี",
           alertType: "destructive" as const
         };
       } else if (age > 45) {

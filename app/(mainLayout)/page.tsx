@@ -1,5 +1,5 @@
 "use client";
-
+//push 3
 import Image from 'next/image';
 import Logo from '@/public/logo.png';
 import Vaccine from '@/public/vaccine.png';
@@ -67,7 +67,7 @@ export default function Home() {
             <div className="flex justify-center mt-4">
               <Button
                 type="button"
-                className="bg-primary hover:bg-primary-700 text-white py-3 px-8 rounded-lg text-lg"
+                className="bg-primary hover:bg-primary-700 active:bg-primary-800 text-white py-3 px-8 rounded-lg text-lg transition-colors"
                 onClick={handleNextSuggestion}
               >
                 เข้าสู่แบบประเมิน
@@ -91,7 +91,7 @@ export default function Home() {
             <Link href="/onboarding" className="flex items-center gap-2">
               <Button
                 type="button"
-                className="bg-primary hover:bg-primary-700 text-white py-3 px-8 rounded-lg text-lg"
+                className="bg-primary hover:bg-primary-700 active:bg-primary-800 text-white py-3 px-8 rounded-lg text-lg transition-colors"
               >
                 เริ่มทำแบบประเมิน
               </Button>

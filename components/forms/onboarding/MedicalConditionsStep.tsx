@@ -94,8 +94,8 @@ export function MedicalConditionsStep({
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>ภาวะทางการแพทย์</CardTitle>
-        <CardDescription className="text-lg font-medium">
+        <CardTitle className="text-lg font-bold">โรคประจำตัว</CardTitle>
+        <CardDescription className="font-medium">
           กรุณาเลือกในช่องที่ตรงกับสภาวะหรือโรคของท่านในปัจจุบัน
         </CardDescription>
         <Badge variant="secondary" className="w-fit mt-1">
@@ -114,7 +114,9 @@ export function MedicalConditionsStep({
               />
               <Label 
                 htmlFor={condition.id} 
-                className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className={`text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
+                  condition.id === "none" ? "text-red-800 font-medium" : ""
+                }`}
               >
                 {condition.label}
               </Label>
