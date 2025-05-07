@@ -78,19 +78,13 @@ export function ResultsStep({
           reason: "วัคซีนเด็งกี่ไม่ได้รับการอนุมัติสำหรับเด็กอายุต่ำกว่า 4 ปี",
           alertType: "destructive" as const
         };
-      } else if (age > 45) {
-        return {
-          vaccine: "ปรึกษาแพทย์ก่อนฉีดวัคซีนเด็งกี่",
-          reason: "ข้อมูลประสิทธิภาพและความปลอดภัยของวัคซีนในผู้ที่มีอายุมากกว่า 45 ปียังมีจำกัด ควรปรึกษาแพทย์",
-          alertType: "default" as const
-        };
       }
     }
 
     // Default case
     return {
       vaccine: "แนะนำให้ฉีดวัคซีนเด็งกี่",
-      reason: "วัคซีนมีประสิทธิภาพในการลดความรุนแรงของการติดเชื้อครั้งแรกหรือการติดเชื้อซ้ำ",
+      reason: "วัคซีนมีประสิทธิภาพในการลดความรุนแรงของการติดเชื้อครั้งแรกและการติดเชื้อซ้ำ",
       alertType: "success" as const
     };
   };
@@ -101,7 +95,7 @@ export function ResultsStep({
   const handleComplete = () => {
     toast.success("ขอบคุณที่ทำแบบประเมิน", {
       duration: 3000,
-      position: "top-center"
+      position: "bottom-right"
     });
 
     if (onComplete) {
@@ -138,13 +132,6 @@ export function ResultsStep({
               <span className="text-blue-800">
                 {formData.gender === "male" ? "ชาย" :
                   formData.gender === "female" ? "หญิง" : "ไม่ระบุ"}
-              </span>
-            </p>
-
-            <p>
-              <span className="font-bold">คนใกล้ชิดเคยเป็นไข้เลือดออก :</span>{" "}
-              <span className="text-blue-800">
-                {formData.priorExposure ? "ใช่" : "ไม่ใช่"}
               </span>
             </p>
 
