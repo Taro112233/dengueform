@@ -21,10 +21,9 @@ type Condition = {
   label: string;
 };
 
-// List of medical conditions
-const conditions: Condition[] = [
+// Define separate condition groups
+const medicalConditions: Condition[] = [
   { id: "pregnant", label: "หญิงตั้งครรภ์" },
-  { id: "medicalStaff", label: "บุคลากรทางการแพทย์" },
   { id: "chronicDisease", label: "โรคหัวใจ, โรคเบาหวาน, โรคปอดอุดกั้นเรื้อรัง" },
   { id: "liverDisease", label: "โรคตับเรื้อรัง" },
   { id: "kidneyDisease", label: "โรคไตเรื้อรัง" },
@@ -33,8 +32,10 @@ const conditions: Condition[] = [
   { id: "hivHighCD4", label: "ติดเชื้อไวรัสเอชไอวี (ระดับ CD4+ ≥ 200 uL)" },
   { id: "immunodeficiency", label: "บุคคลที่มีภาวะภูมิคุ้มกันบกพร่องรุนแรง" },
   { id: "transplant", label: "บุคคลที่ปลูกถ่ายอวัยวะหรือไขกระดูก" },
-  { id: "none", label: "ไม่มีภาวะดังกล่าวข้างบน" },
 ];
+
+const staffCondition: Condition = { id: "medicalStaff", label: "บุคลากรทางการแพทย์" };
+const noneCondition: Condition = { id: "none", label: "ไม่มีภาวะดังกล่าวข้างบน" };
 
 // Define the form data interface
 interface FormData {
@@ -64,27 +65,35 @@ export function MedicalConditionsStep({
 
   // Toggle a condition selection
   const toggleCondition = (id: string) => {
-    // If selecting "none", clear all other selections
-    if (id === "none") {
-      if (!selectedConditions.includes("none")) {
-        setSelectedConditions(["none"]);
-        updateData("conditions", ["none"]);
-      }
-      return;
-    }
-
-    // If selecting any other condition, remove "none" if it's selected
     let updatedConditions = [...selectedConditions];
 
-    if (updatedConditions.includes("none")) {
-      updatedConditions = updatedConditions.filter(c => c !== "none");
-    }
-
-    // Toggle the selected condition
-    if (updatedConditions.includes(id)) {
-      updatedConditions = updatedConditions.filter(c => c !== id);
+    if (id === "none") {
+      if (!updatedConditions.includes("none")) {
+        // If selecting "none", clear all other selections except medicalStaff
+        updatedConditions = updatedConditions.filter(c => c === "medicalStaff");
+        updatedConditions.push("none");
+      } else {
+        // If unselecting "none", just remove it
+        updatedConditions = updatedConditions.filter(c => c !== "none");
+      }
+    } else if (id === "medicalStaff") {
+      // Medical staff can be toggled freely
+      if (updatedConditions.includes(id)) {
+        updatedConditions = updatedConditions.filter(c => c !== id);
+      } else {
+        updatedConditions.push(id);
+      }
     } else {
-      updatedConditions.push(id);
+      // For medical conditions
+      // Remove "none" if it exists
+      updatedConditions = updatedConditions.filter(c => c !== "none");
+      
+      // Toggle the selected condition
+      if (updatedConditions.includes(id)) {
+        updatedConditions = updatedConditions.filter(c => c !== id);
+      } else {
+        updatedConditions.push(id);
+      }
     }
 
     setSelectedConditions(updatedConditions);
@@ -94,34 +103,67 @@ export function MedicalConditionsStep({
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle className="text-lg font-bold">โรคประจำตัว</CardTitle>
+        <CardTitle className="text-lg font-bold">สภาวะหรือโรคประจำตัว</CardTitle>
         <CardDescription className="font-medium">
           กรุณาเลือกในช่องที่ตรงกับสภาวะหรือโรคของท่านในปัจจุบัน
         </CardDescription>
         <Badge variant="secondary" className="w-fit mt-1">
-          ท่านสามารถเลือกได้มากกว่า 1 ข้อ
+          สามารถเลือกได้มากกว่า 1 ข้อ
         </Badge>
       </CardHeader>
 
       <CardContent>
-        <div className="grid grid-cols-1 gap-4">
-          {conditions.map((condition) => (
-            <div key={condition.id} className="flex items-start space-x-3">
+        <div className="space-y-4">
+          <div className="space-y-4">
+            {medicalConditions.map((condition) => (
+              <div key={condition.id} className="flex items-start space-x-3">
+                <Checkbox
+                  id={condition.id}
+                  checked={selectedConditions.includes(condition.id)}
+                  onCheckedChange={() => toggleCondition(condition.id)}
+                />
+                <Label 
+                  htmlFor={condition.id} 
+                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {condition.label}
+                </Label>
+              </div>
+            ))}
+          </div>
+          
+          <div>
+            <div className="flex items-start space-x-3">
               <Checkbox
-                id={condition.id}
-                checked={selectedConditions.includes(condition.id)}
-                onCheckedChange={() => toggleCondition(condition.id)}
+                id={noneCondition.id}
+                checked={selectedConditions.includes(noneCondition.id)}
+                onCheckedChange={() => toggleCondition(noneCondition.id)}
               />
               <Label 
-                htmlFor={condition.id} 
-                className={`text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
-                  condition.id === "none" ? "text-red-800 font-medium" : ""
-                }`}
+                htmlFor={noneCondition.id} 
+                className="text-sm leading-none text-red-800"
               >
-                {condition.label}
+                {noneCondition.label}
               </Label>
             </div>
-          ))}
+          </div>
+
+          <div>
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id={staffCondition.id}
+                checked={selectedConditions.includes(staffCondition.id)}
+                onCheckedChange={() => toggleCondition(staffCondition.id)}
+              />
+              <Label 
+                htmlFor={staffCondition.id} 
+                className="text-sm leading-none text-blue-800"
+              >
+                {staffCondition.label}
+              </Label>
+            </div>
+          </div>
+
         </div>
       </CardContent>
 
