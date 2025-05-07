@@ -49,7 +49,7 @@ export function ResultsStep({
 }: ResultsStepProps) {
   // Helper function to determine recommendation based on form data
   const getRecommendation = () => {
-    const { age, priorExposure, conditions } = formData;
+    const { age, conditions } = formData;
 
     // Check critical conditions first
     if (conditions.includes("pregnant")) {
