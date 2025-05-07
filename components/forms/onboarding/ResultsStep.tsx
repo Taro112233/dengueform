@@ -87,26 +87,11 @@ export function ResultsStep({
       }
     }
 
-    // Prior exposure is an important factor
-    if (priorExposure === true) {
-      return {
-        vaccine: "แนะนำให้ฉีดวัคซีนเด็งกี่",
-        reason: "สำหรับผู้ที่เคยติดเชื้อเด็งกี่มาก่อน วัคซีนมีประสิทธิภาพสูงในการป้องกันการติดเชื้อซ้ำ",
-        alertType: "default" as const
-      };
-    } else if (priorExposure === false) {
-      return {
-        vaccine: "ปรึกษาแพทย์ก่อนฉีดวัคซีนเด็งกี่",
-        reason: "สำหรับผู้ที่ไม่เคยติดเชื้อเด็งกี่มาก่อน ควรพิจารณาความเสี่ยงและประโยชน์ร่วมกับแพทย์",
-        alertType: "default" as const
-      };
-    }
-
     // Default case
     return {
-      vaccine: "ปรึกษาแพทย์เพื่อประเมินความเหมาะสม",
-      reason: "การตัดสินใจฉีดวัคซีนควรพิจารณาร่วมกับแพทย์โดยคำนึงถึงปัจจัยเสี่ยงและประโยชน์ที่จะได้รับ",
-      alertType: "default" as const
+      vaccine: "แนะนำให้ฉีดวัคซีนเด็งกี่",
+      reason: "วัคซีนมีประสิทธิภาพในการลดความรุนแรงของการติดเชื้อครั้งแรกหรือการติดเชื้อซ้ำ",
+      alertType: "success" as const
     };
   };
 
@@ -127,7 +112,7 @@ export function ResultsStep({
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>ผลการประเมิน</CardTitle>
+        <CardTitle className="text-lg font-bold">ผลการประเมิน</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-6">
@@ -141,16 +126,16 @@ export function ResultsStep({
 
         {/* Summary of user information */}
         <div>
-          <h3 className="mb-2 font-bold">ข้อมูลของท่าน</h3>
+          <h3 className="mb-2 font-bold text-lg">ข้อมูลของท่าน</h3>
 
           <div className="space-y-2">
             <p><span className="font-bold">อายุ :</span>{" "}
-              <span className="text-red-700">{formData.age} ปี</span>
+              <span className="text-blue-800">{formData.age} ปี</span>
             </p>
 
             <p>
               <span className="font-bold">เพศ :</span>{" "}
-              <span className="text-red-700">
+              <span className="text-blue-800">
                 {formData.gender === "male" ? "ชาย" :
                   formData.gender === "female" ? "หญิง" : "ไม่ระบุ"}
               </span>
@@ -158,7 +143,7 @@ export function ResultsStep({
 
             <p>
               <span className="font-bold">คนใกล้ชิดเคยเป็นไข้เลือดออก :</span>{" "}
-              <span className="text-red-700">
+              <span className="text-blue-800">
                 {formData.priorExposure ? "ใช่" : "ไม่ใช่"}
               </span>
             </p>
