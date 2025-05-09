@@ -12,18 +12,19 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { toast } from "sonner"; // Import toast from sonner
 
 // Define the props for the component
 type ResultsStepProps = {
   formData: {
+    name: string;
     age: number | null;
     gender: "male" | "female" | "unspecified" | null;
     priorExposure: boolean | null;
     conditions: string[];
   };
   onBack?: () => void;
-  onComplete?: () => void;
+  onSubmit?: (recommendation: { vaccine: string, reason: string }) => void;
+  isSubmitting?: boolean;
 };
 
 // Condition labels lookup for displaying in results
@@ -45,7 +46,8 @@ const conditionLabels: Record<string, string> = {
 export function ResultsStep({
   formData,
   onBack,
-  onComplete
+  onSubmit,
+  isSubmitting = false
 }: ResultsStepProps) {
   // Helper function to determine recommendation based on form data
   const getRecommendation = () => {
@@ -93,13 +95,11 @@ export function ResultsStep({
 
   // Handle completion and show toast
   const handleComplete = () => {
-    toast.success("ขอบคุณที่ทำแบบประเมิน", {
-      duration: 3000,
-      position: "bottom-right"
-    });
-
-    if (onComplete) {
-      onComplete();
+    if (onSubmit) {
+      onSubmit({
+        vaccine: recommendation.vaccine,
+        reason: recommendation.reason
+      });
     }
   };
 
@@ -123,6 +123,10 @@ export function ResultsStep({
           <h3 className="mb-2 font-bold text-lg">ข้อมูลของท่าน</h3>
 
           <div className="space-y-2">
+            <p><span className="font-bold">ชื่อ :</span>{" "}
+              <span className="text-blue-800">{formData.name}</span>
+            </p>
+            
             <p><span className="font-bold">อายุ :</span>{" "}
               <span className="text-blue-800">{formData.age} ปี</span>
             </p>
@@ -164,15 +168,18 @@ export function ResultsStep({
         {onBack && (
           <Button
             onClick={onBack}
-            variant="outline">
+            variant="outline"
+            disabled={isSubmitting}
+          >
             ย้อนกลับ
           </Button>
         )}
         <Link href="/">
           <Button
             onClick={handleComplete}
+            disabled={isSubmitting}
           >
-            เสร็จสิ้น
+            {isSubmitting ? "กำลังบันทึก..." : "บันทึกและเสร็จสิ้น"}
           </Button>
         </Link>
       </CardFooter>

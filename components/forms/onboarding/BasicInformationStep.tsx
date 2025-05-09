@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 
 // Define the FormData type
 interface FormData {
+  name: string;
   age: number | null;
   gender: "male" | "female" | "unspecified" | null;
   priorExposure: boolean | null;
@@ -24,7 +25,7 @@ interface FormData {
 // Define the props for the component
 type BasicInformationStepProps = {
   formData: FormData;
-  updateData: (field: string, value: number | string | boolean | null) => void;
+  updateData: (field: string, value: string | number | boolean | null) => void;
   onNext: () => void;
 };
 
@@ -39,6 +40,7 @@ export function BasicInformationStep({
   // Check if all required fields are filled
   useEffect(() => {
     const valid =
+      formData.name.trim() !== '' &&
       formData.age !== null &&
       formData.gender !== null &&
       formData.priorExposure !== null;
@@ -57,9 +59,21 @@ export function BasicInformationStep({
       </CardHeader>
 
       <CardContent className="space-y-6">
+        {/* Name Input */}
+        <div className="space-y-4">
+          <Label htmlFor="name">1. ชื่อ-นามสกุล</Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="กรอกชื่อ-นามสกุลของคุณ"
+            value={formData.name}
+            onChange={(e) => updateData('name', e.target.value)}
+          />
+        </div>
+
         {/* Age Input */}
         <div className="space-y-4">
-          <Label htmlFor="age">1. อายุ</Label>
+          <Label htmlFor="age">2. อายุ</Label>
           <Input
             id="age"
             type="number"
@@ -76,7 +90,7 @@ export function BasicInformationStep({
 
         {/* Gender Selection */}
         <div className="space-y-4">
-          <Label>2. เพศ</Label>
+          <Label>3. เพศ</Label>
           <RadioGroup
             value={formData.gender || ''}
             onValueChange={(value) => updateData('gender', value as "male" | "female" | "unspecified")}
@@ -95,7 +109,7 @@ export function BasicInformationStep({
 
         {/* Prior Exposure */}
         <div className="space-y-4">
-          <Label>3. มีคนใกล้ชิดของคุณเคยเป็นไข้เลือดออกหรือไม่?</Label>
+          <Label>4. มีคนใกล้ชิดของคุณเคยเป็นไข้เลือดออกหรือไม่?</Label>
           <div className="grid grid-cols-2 gap-4">
             <Button
               type="button"

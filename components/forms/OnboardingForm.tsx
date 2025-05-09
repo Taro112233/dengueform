@@ -7,9 +7,11 @@ import { Progress } from "@/components/ui/progress";
 import { BasicInformationStep } from "./onboarding/BasicInformationStep";
 import { MedicalConditionsStep } from "./onboarding/MedicalConditionsStep";
 import { ResultsStep } from "./onboarding/ResultsStep";
+import { saveAssessment } from "@/app/actions";
+import { toast } from "sonner";
 
 // Define the form data type
-interface FormData {
+export interface FormData {
   name: string;
   age: number | null;
   gender: "male" | "female" | "unspecified" | null;
@@ -17,12 +19,13 @@ interface FormData {
   conditions: string[];
 }
 
-type FormDataValue = string | number | boolean | null | string[];
+export type FormDataValue = string | number | boolean | null | string[];
 
 export function OnboardingForm() {
   // State for tracking the current step
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 3;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize form data
   const [formData, setFormData] = useState<FormData>({
@@ -39,6 +42,37 @@ export function OnboardingForm() {
       ...prev,
       [field]: value
     }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (recommendation: { vaccine: string, reason: string }) => {
+    try {
+      setIsSubmitting(true);
+      
+      // Save assessment data to database
+      const result = await saveAssessment({
+        ...formData,
+        recommendation: recommendation.vaccine,
+        reason: recommendation.reason
+      });
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      
+      toast.success("ข้อมูลถูกบันทึกเรียบร้อยแล้ว", {
+        duration: 3000,
+        position: "bottom-right"
+      });
+    } catch (error) {
+      console.error("Error saving assessment:", error);
+      toast.error("ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง", {
+        duration: 3000,
+        position: "bottom-right"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Calculate progress percentage
@@ -90,6 +124,8 @@ export function OnboardingForm() {
           <ResultsStep
             formData={formData}
             onBack={() => setCurrentStep(2)}
+            onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
           />
         )}
       </div>
