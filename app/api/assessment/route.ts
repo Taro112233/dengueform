@@ -16,7 +16,6 @@ export async function POST(request: Request) {
     // Create assessment record in database
     const assessment = await prisma.assessment.create({
       data: {
-        name: data.name || '',
         age: data.age,
         gender: data.gender,
         priorExposure: data.priorExposure,
