@@ -21,9 +21,6 @@ type ResultsStepProps = {
     priorExposure: boolean | null;
     conditions: string[];
   };
-  onBack?: () => void;
-  onSubmit?: (recommendation: { vaccine: string, reason: string }) => void;
-  isSubmitting?: boolean;
 };
 
 // Condition labels lookup for displaying in results
@@ -43,10 +40,7 @@ const conditionLabels: Record<string, string> = {
 };
 
 export function ResultsStep({
-  formData,
-  onBack,
-  onSubmit,
-  isSubmitting = false
+  formData
 }: ResultsStepProps) {
   // Helper function to determine recommendation based on form data
   const getRecommendation = () => {
@@ -91,16 +85,6 @@ export function ResultsStep({
   };
 
   const recommendation = getRecommendation();
-
-  // Handle completion and show toast
-  const handleComplete = () => {
-    if (onSubmit) {
-      onSubmit({
-        vaccine: recommendation.vaccine,
-        reason: recommendation.reason
-      });
-    }
-  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -159,22 +143,10 @@ export function ResultsStep({
         </div>
       </CardContent>
 
-      <CardFooter className="flex justify-between">
-        {onBack && (
-          <Button
-            onClick={onBack}
-            variant="outline"
-            disabled={isSubmitting}
-          >
-            ย้อนกลับ
-          </Button>
-        )}
+      <CardFooter className="flex justify-end">
         <Link href="/">
-          <Button
-            onClick={handleComplete}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "กำลังบันทึก..." : "บันทึกและเสร็จสิ้น"}
+          <Button>
+            เสร็จสิ้น
           </Button>
         </Link>
       </CardFooter>

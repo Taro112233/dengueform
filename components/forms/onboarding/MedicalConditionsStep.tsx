@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { saveAssessment } from "@/app/actions";
 
 // Define the conditions type
 type Condition = {
@@ -39,9 +40,10 @@ const noneCondition: Condition = { id: "none", label: "ไม่มีภาว�
 
 // Define the form data interface
 interface FormData {
-  // Add your medical conditions form fields here
+  age: number | null;
+  gender: "male" | "female" | "unspecified" | null;
+  priorExposure: boolean | null;
   conditions: string[];
-  // ... other fields
 }
 
 // Define the props for the component
@@ -50,6 +52,44 @@ type MedicalConditionsStepProps = {
   updateData: (field: string, value: string[]) => void;
   onNext: () => void;
   onBack: () => void;
+};
+
+// Helper function to determine recommendation based on form data
+const getRecommendation = (formData: FormData) => {
+  const { age, conditions } = formData;
+
+  // Check critical conditions first
+  if (conditions.includes("pregnant")) {
+    return {
+      vaccine: "ไม่แนะนำให้ฉีดวัคซีนเด็งกี่",
+      reason: "วัคซีนเด็งกี่ไม่แนะนำสำหรับหญิงตั้งครรภ์ เนื่องจากข้อมูลด้านความปลอดภัยยังมีจำกัด",
+    };
+  }
+
+  if (conditions.includes("immunodeficiency") || 
+      conditions.includes("hivLowCD4") || 
+      conditions.includes("transplant")) {
+    return {
+      vaccine: "ไม่แนะนำให้ฉีดวัคซีนเด็งกี่",
+      reason: "ผู้ที่มีภาวะภูมิคุ้มกันบกพร่องรุนแรง ผู้ที่มีระดับ CD4+ ต่ำ หรือผู้ที่ได้รับการปลูกถ่ายอวัยวะ มีความเสี่ยงสูงต่อการติดเชื้อและอาจไม่ตอบสนองต่อวัคซีนอย่างเพียงพอ",
+    };
+  }
+
+  // Age-based recommendations
+  if (age !== null) {
+    if (age < 4) {
+      return {
+        vaccine: "ไม่แนะนำให้ฉีดวัคซีนเด็งกี่",
+        reason: "วัคซีนเด็งกี่ไม่ได้รับการอนุมัติสำหรับเด็กอายุต่ำกว่า 4 ปี",
+      };
+    }
+  }
+
+  // Default case
+  return {
+    vaccine: "แนะนำให้ฉีดวัคซีนเด็งกี่",
+    reason: "วัคซีนมีประสิทธิภาพในการลดความรุนแรงของการติดเชื้อครั้งแรกและการติดเชื้อซ้ำ",
+  };
 };
 
 export function MedicalConditionsStep({
@@ -62,6 +102,7 @@ export function MedicalConditionsStep({
   const [selectedConditions, setSelectedConditions] = useState<string[]>(
     formData.conditions || []
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Toggle a condition selection
   const toggleCondition = (id: string) => {
@@ -98,6 +139,39 @@ export function MedicalConditionsStep({
 
     setSelectedConditions(updatedConditions);
     updateData("conditions", updatedConditions);
+  };
+
+  // Handle check action with data saving
+  const handleCheck = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      // Get the recommendation for this data
+      const recommendation = getRecommendation({
+        ...formData,
+        conditions: selectedConditions
+      });
+      
+      // Save assessment data to database
+      const result = await saveAssessment({
+        ...formData,
+        conditions: selectedConditions,
+        recommendation: recommendation.vaccine,
+        reason: recommendation.reason
+      });
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      
+      // Move to next step
+      onNext();
+    } catch (error) {
+      console.error("Error saving assessment:", error);
+      // You could add toast error notification here
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -173,14 +247,15 @@ export function MedicalConditionsStep({
         <Button
           variant="outline"
           onClick={onBack}
+          disabled={isSubmitting}
         >
           ย้อนกลับ
         </Button>
         <Button
-          onClick={onNext}
-          disabled={selectedConditions.length === 0}
+          onClick={handleCheck}
+          disabled={selectedConditions.length === 0 || isSubmitting}
         >
-          ตรวจสอบ
+          {isSubmitting ? "กำลังประมวลผล..." : "ตรวจสอบ"}
         </Button>
       </CardFooter>
     </Card>
