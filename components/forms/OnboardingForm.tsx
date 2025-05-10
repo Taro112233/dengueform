@@ -7,7 +7,6 @@ import { Progress } from "@/components/ui/progress";
 import { BasicInformationStep } from "./onboarding/BasicInformationStep";
 import { MedicalConditionsStep } from "./onboarding/MedicalConditionsStep";
 import { ResultsStep } from "./onboarding/ResultsStep";
-import { toast } from "sonner";
 
 // Define the form data type
 export interface FormData {
