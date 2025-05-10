@@ -1,6 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+// schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,14 +9,15 @@ datasource db {
 }
 
 model Assessment {
-  id            String   @id @default(cuid())
-  name          String?
-  age           Int?
-  gender        String?
-  priorExposure Boolean?
-  conditions    String[] // Store condition IDs as an array
-  recommendation String?
-  reason        String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String   @id @default(cuid())
+  age            Int
+  gender         String
+  priorExposure  Boolean
+  conditions     String[] // Stored as an array of string IDs
+  recommendation String
+  reason         String   @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("assessments")
 }

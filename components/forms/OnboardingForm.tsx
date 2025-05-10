@@ -12,7 +12,6 @@ import { toast } from "sonner";
 
 // Define the form data type
 export interface FormData {
-  name: string;
   age: number | null;
   gender: "male" | "female" | "unspecified" | null;
   priorExposure: boolean | null;
@@ -29,7 +28,6 @@ export function OnboardingForm() {
 
   // Initialize form data
   const [formData, setFormData] = useState<FormData>({
-    name: '',
     age: null,
     gender: null,
     priorExposure: null,

@@ -16,7 +16,6 @@ import Link from "next/link";
 // Define the props for the component
 type ResultsStepProps = {
   formData: {
-    name: string;
     age: number | null;
     gender: "male" | "female" | "unspecified" | null;
     priorExposure: boolean | null;
@@ -123,10 +122,6 @@ export function ResultsStep({
           <h3 className="mb-2 font-bold text-lg">ข้อมูลของท่าน</h3>
 
           <div className="space-y-2">
-            <p><span className="font-bold">ชื่อ :</span>{" "}
-              <span className="text-blue-800">{formData.name}</span>
-            </p>
-            
             <p><span className="font-bold">อายุ :</span>{" "}
               <span className="text-blue-800">{formData.age} ปี</span>
             </p>

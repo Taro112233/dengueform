@@ -2,48 +2,37 @@
 
 import { prisma } from "@/lib/db";
 
-type AssessmentData = {
-  name: string;
+interface AssessmentData {
   age: number | null;
   gender: string | null;
   priorExposure: boolean | null;
   conditions: string[];
   recommendation: string;
   reason: string;
-};
+}
 
 export async function saveAssessment(data: AssessmentData) {
   try {
-    // Validate required fields
-    if (!data.name || data.age === null || data.gender === null || data.priorExposure === null) {
-      return {
-        success: false,
-        error: "Missing required fields"
-      };
+    // Basic validation
+    if (!data.age || !data.gender || data.priorExposure === null) {
+      return { success: false, error: "ข้อมูลไม่ครบถ้วน" };
     }
 
-    // Create assessment record in database
-    const assessment = await prisma.assessment.create({
+    // Save to database
+    await prisma.assessment.create({
       data: {
-        name: data.name,
         age: data.age,
         gender: data.gender,
         priorExposure: data.priorExposure,
         conditions: data.conditions,
         recommendation: data.recommendation,
         reason: data.reason
-      },
+      }
     });
 
-    return {
-      success: true,
-      id: assessment.id
-    };
+    return { success: true };
   } catch (error) {
-    console.error("Error saving assessment:", error);
-    return {
-      success: false,
-      error: "Failed to save assessment"
-    };
+    console.error("Database error:", error);
+    return { success: false, error: "เกิดข้อผิดพลาดในการบันทึกข้อมูล" };
   }
 }
