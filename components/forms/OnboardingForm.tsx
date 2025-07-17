@@ -48,7 +48,7 @@ export function OnboardingForm() {
         <Image src={Logo} alt="Takeda logo" height={50} />
         <h1 className="text-xl sm:text-2xl font-bold text-center px-2">
           แบบประเมินความเหมาะสมในการฉีดวัคซีนป้องกัน<br/>
-          <span className="text-primary">โรคไข้เลือกออก</span>
+          <span className="text-primary">โรคไข้เลือดออก</span>
         </h1>
       </div>
 

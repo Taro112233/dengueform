@@ -49,8 +49,8 @@ export function ResultsStep({
     // Check critical conditions first
     if (conditions.includes("pregnant")) {
       return {
-        vaccine: "ไม่แนะนำให้ฉีดวัคซีนเด็งกี่",
-        reason: "วัคซีนเด็งกี่ไม่แนะนำสำหรับหญิงตั้งครรภ์ เนื่องจากข้อมูลด้านความปลอดภัยยังมีจำกัด",
+        vaccine: "ไม่แนะนำให้ฉีดวัคซีน Qdenga ",
+        reason: "วัคซีน Qdenga ไม่แนะนำสำหรับหญิงตั้งครรภ์ เนื่องจากข้อมูลด้านความปลอดภัยยังมีจำกัด",
         alertType: "destructive" as const
       };
     }
@@ -59,7 +59,7 @@ export function ResultsStep({
         conditions.includes("hivLowCD4") || 
         conditions.includes("transplant")) {
       return {
-        vaccine: "ไม่แนะนำให้ฉีดวัคซีนเด็งกี่",
+        vaccine: "ไม่แนะนำให้ฉีดวัคซีน Qdenga ",
         reason: "ผู้ที่มีภาวะภูมิคุ้มกันบกพร่องรุนแรง ผู้ที่มีระดับ CD4+ ต่ำ หรือผู้ที่ได้รับการปลูกถ่ายอวัยวะ มีความเสี่ยงสูงต่อการติดเชื้อและอาจไม่ตอบสนองต่อวัคซีนอย่างเพียงพอ",
         alertType: "destructive" as const
       };
@@ -69,8 +69,8 @@ export function ResultsStep({
     if (age !== null) {
       if (age < 4) {
         return {
-          vaccine: "ไม่แนะนำให้ฉีดวัคซีนเด็งกี่",
-          reason: "วัคซีนเด็งกี่ไม่ได้รับการอนุมัติสำหรับเด็กอายุต่ำกว่า 4 ปี",
+          vaccine: "ไม่แนะนำให้ฉีดวัคซีน Qdenga ",
+          reason: "วัคซีน Qdenga ไม่ได้รับการอนุมัติสำหรับเด็กอายุต่ำกว่า 4 ปี",
           alertType: "destructive" as const
         };
       }
@@ -78,7 +78,7 @@ export function ResultsStep({
 
     // Default case
     return {
-      vaccine: "แนะนำให้ฉีดวัคซีนเด็งกี่",
+      vaccine: "แนะนำให้ฉีดวัคซีน Qdenga ",
       reason: "วัคซีนมีประสิทธิภาพในการลดความรุนแรงของการติดเชื้อครั้งแรกและการติดเชื้อซ้ำ",
       alertType: "success" as const
     };
